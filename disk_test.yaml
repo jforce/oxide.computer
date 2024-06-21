@@ -1,0 +1,84 @@
+---
+- name: Manage Oxide Disks
+  hosts: localhost
+  vars_files:
+    - ./oxide_vault.yaml
+  module_defaults:
+    oxide_disk:
+      oxide_host: "{{ oxide_api }}"
+      oxide_token: "{{ oxide_token }}"
+
+  tasks:
+
+    - name: Create a blank disk
+      oxide_disk:
+        project: "{{ oxide_project }}"
+        name: "blanketyblank"
+        description: "A new blank disk"
+        size: 1
+        disk_source:
+          type: "blank"
+          block_size: 512
+        state: present
+
+    - name: Create a blank disk
+      oxide_disk:
+        project: "{{ oxide_project }}"
+        name: "defaultydisk"
+        description: "A new blank disk"
+        size: 1
+        disk_source:
+          type: "blank"
+        state: present
+
+    - name: Create a disk from an image
+      oxide_disk:
+        project: "{{ oxide_project }}"
+        name: "thisisapicture"
+        description: "A disk from an image"
+        size: 5
+        disk_source:
+          type: "image"
+          image_id: 88d85828-32a1-4943-9ad3-396f0196274d
+        state: present
+
+    - name: Create a disk from a snapshot
+      oxide_disk:
+        project: "{{ oxide_project }}"
+        name: "thisisnotaphotograph"
+        description: "A disk from a snapshot"
+        size: 50
+        disk_source:
+          type: "snapshot"
+          snapshot_id: "d5019993-eadf-423c-b529-ac9892c5d15f"
+        state: present
+
+    - name: Import
+      oxide_disk:
+        project: "{{ oxide_project }}"
+        name: "importo"
+        description: "A disk for importing blocks"
+        size: 10
+        disk_source:
+          type: "importing_blocks"
+          block_size: 4096
+        state: present
+
+    - name: Pause until prompt
+      ansible.builtin.pause:
+
+    - name: Delete a disk
+      oxide_disk:
+        project: "{{ oxide_project }}"
+        name: "blanketyblank"
+        state: absent
+
+    - name: Delete a few disks
+      oxide_disk:
+        project: "{{ oxide_project }}"
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - thisisapicture
+        - thisisnotaphotograph
+        - blanketyblank
