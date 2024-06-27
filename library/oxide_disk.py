@@ -66,6 +66,7 @@ options:
         required: false
         type: int
         choices: [512, 2048, 4096]
+        default: 512
       snapshot_id:
         description:
           - The ID of the snapshot from which to create the disk. Required when type is 'snapshot'.
@@ -257,6 +258,7 @@ def main():
     }
 
     if state == 'present':
+
         if disk_source['type'] in ['blank', 'importing_blocks'] and 'block_size' not in disk_source:
             module.fail_json(msg="Parameter 'block_size' is required when disk_source type is 'blank' or 'importing_blocks'")
         if disk_source['type'] == 'snapshot' and 'snapshot_id' not in disk_source:
@@ -274,14 +276,17 @@ def main():
         }, project, oxide_host, headers)
 
         if status_code == 201:
-            module.exit_json(changed=True, disk=response)
+            module.exit_json(changed=True, disk=response, msg="Disk created")
         elif status_code == 400:
-            module.exit_json(changed=False, disk=response)
+            if 'error_code' in response and response['error_code'] == 'ObjectAlreadyExists':
+              module.exit_json(changed=False, msg="Disk already present")
         else:
             module.fail_json(msg="Failed to create disk", response=response)
 
     elif state == 'absent':
+
         status_code, response = delete_disk(name, project, oxide_host, headers)
+
         if status_code == 204:
             module.exit_json(changed=True, msg="Disk deleted")
         elif status_code == 404:
