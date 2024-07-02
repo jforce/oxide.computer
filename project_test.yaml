@@ -1,0 +1,22 @@
+---
+- name: Manage Oxide Projects
+  hosts: localhost
+  vars_files:
+    - ./oxide_vault.yaml
+  module_defaults:
+    oxide_project:
+      oxide_host: "{{ oxide_api }}"
+      oxide_token: "{{ oxide_token }}"
+
+  tasks:
+
+    - name: Create a project
+      oxide_project:
+        name: "mynewproject"
+        description: "A new project"
+        state: present
+
+    - name: Delete a project
+      oxide_project:
+        name: "mynewproject"
+        state: absent

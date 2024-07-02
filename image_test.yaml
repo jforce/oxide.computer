@@ -1,0 +1,47 @@
+---
+- name: Manage Oxide Disks
+  hosts: localhost
+  vars_files:
+    - ./oxide_vault.yaml
+  module_defaults:
+    oxide_image:
+      oxide_host: "{{ oxide_api }}"
+      oxide_token: "{{ oxide_token }}"
+
+  tasks:
+
+    - name: Create an image
+      oxide_image:
+        project: "{{ oxide_project }}"
+        name: "nicehat"
+        description: "A new image"
+        os: "linux"
+        version: "40"
+        source:
+          snapshot:
+            id: "a1bcbc81-12e5-4fdd-84ba-378d620c1247"
+        state: present
+
+    - name: Tro to create an image again for idempotency
+      oxide_image:
+        project: "{{ oxide_project }}"
+        name: "nicehat"
+        description: "A new image"
+        os: "linux"
+        version: "40"
+        source:
+          snapshot:
+            id: "a1bcbc81-12e5-4fdd-84ba-378d620c1247"
+        state: present
+
+    - name: Delete an image
+      oxide_image:
+        project: "{{ oxide_project }}"
+        name: "nicehat"
+        state: absent
+
+    - name: Delete an image for idempotency
+      oxide_image:
+        project: "{{ oxide_project }}"
+        name: "nicehat"
+        state: absent
