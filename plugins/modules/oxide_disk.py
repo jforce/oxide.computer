@@ -9,7 +9,6 @@ from ansible.module_utils.oxide_utils import validate_name
 import requests
 import json
 
-
 DOCUMENTATION = r'''
 ---
 module: oxide_disk

@@ -1,5 +1,5 @@
 ---
-- name: Manage Oxide Disks
+- name: Manage Oxide Snapshots
   hosts: localhost
   vars_files:
     - ./oxide_vault.yaml

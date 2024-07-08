@@ -1,0 +1,36 @@
+---
+- name: Manage Oxide SSH Keys
+  hosts: localhost
+  vars_files:
+    - ./oxide_vault.yaml
+  module_defaults:
+    oxide_ssh_key:
+      oxide_host: "{{ oxide_api }}"
+      oxide_token: "{{ oxide_token }}"
+  tasks:
+
+    - name: Create an SSH key
+      oxide_ssh_key:
+        name: "skeleton"
+        public_key: "ssh-rsa AAAAB3N..."
+        state: present
+
+    - name: SSH key creation idempotence check
+      oxide_ssh_key:
+        name: "skeleton"
+        public_key: "ssh-rsa AAAAB3N..."
+        state: present
+
+    - name: Pause for 15 seconds
+      ansible.builtin.pause:
+        seconds: 15
+
+    - name: Delete an SSH key
+      oxide_ssh_key:
+        name: "skeleton"
+        state: absent
+
+    - name: SSH key deletion idempotence check
+      oxide_ssh_key:
+        name: "skeleton"
+        state: absent
