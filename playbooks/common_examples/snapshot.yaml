@@ -1,0 +1,43 @@
+---
+- name: Manage Oxide Disks
+  hosts: localhost
+  vars_files:
+    - ./oxide_vault.yaml
+  module_defaults:
+    oxide_snapshot:
+      oxide_host: "{{ oxide_api }}"
+      oxide_token: "{{ oxide_token }}"
+
+  tasks:
+
+    - name: Create a snapshot
+      oxide_snapshot:
+        project: "{{ oxide_project }}"
+        name: "snap"
+        description: "A snapshot of a disk"
+        disk: "fedorafun"
+        state: present
+
+    - name: Snapshot creation idempotence check
+      oxide_snapshot:
+        project: "{{ oxide_project }}"
+        name: "snap"
+        description: "A snapshot of a disk"
+        disk: "fedorafun"
+        state: present
+
+    - name: Pause for 15 seconds
+      ansible.builtin.pause:
+        seconds: 15
+
+    - name: Delete a snapshot
+      oxide_snapshot:
+        project: "{{ oxide_project }}"
+        name: "snap"
+        state: absent
+
+    - name: Snapshot deletion idempotence check
+      oxide_snapshot:
+        project: "{{ oxide_project }}"
+        name: "snap"
+        state: absent

@@ -15,8 +15,3 @@
         name: "mynewproject"
         description: "A new project"
         state: present
-
-    - name: Delete a project
-      oxide_project:
-        name: "mynewproject"
-        state: absent

@@ -4,11 +4,10 @@
 # Copyright: Oxide Computer Company
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.oxide_utils import validate_name
 import requests
 import json
-import re
 
 
 DOCUMENTATION = r'''
@@ -96,7 +95,7 @@ EXAMPLES = r'''
   oxide_disk:
     oxide_host: "https://api.oxide.computer"
     oxide_token: "your_oxide_token"
-    project: "3f8e4c7a-9a3d-4e2f-b1c7-839f6d34f7e2"
+    project: "your_project_id"
     name: "blanketyblank"
     description: "A new blank disk"
     size: 50
@@ -110,7 +109,7 @@ EXAMPLES = r'''
   oxide_disk:
     oxide_host: "https://api.oxide.computer"
     oxide_token: "your_oxide_token"
-    project: "3f8e4c7a-9a3d-4e2f-b1c7-839f6d34f7e2"
+    project: "your_project_id"
     name: "thisisnotaphotograph"
     description: "A disk from a snapshot"
     size: 50
@@ -124,7 +123,7 @@ EXAMPLES = r'''
   oxide_disk:
     oxide_host: "https://api.oxide.computer"
     oxide_token: "your_oxide_token"
-    project: "3f8e4c7a-9a3d-4e2f-b1c7-839f6d34f7e2"
+    project: "your_project_id"
     name: "thisisapicture"
     description: "A disk from an image"
     size: 50
@@ -138,7 +137,7 @@ EXAMPLES = r'''
   oxide_disk:
     oxide_host: "https://api.oxide.computer"
     oxide_token: "your_oxide_token"
-    project: "3f8e4c7a-9a3d-4e2f-b1c7-839f6d34f7e2"
+    project: "your_project_id"
     name: "importo"
     description: "A disk ready for importing blocks"
     size: 100
@@ -152,7 +151,7 @@ EXAMPLES = r'''
   oxide_disk:
     oxide_host: "https://api.oxide.computer"
     oxide_token: "your_oxide_token"
-    project: "3f8e4c7a-9a3d-4e2f-b1c7-839f6d34f7e2"
+    project: "your_project_id"
     name: "blanketyblank"
     state: absent
 '''
@@ -179,14 +178,6 @@ response:
   returned: on failure
   type: dict
 '''
-
-def validate_name(name):
-    pattern = r"^[a-z0-9][a-z0-9-]*$"
-    if len(name) > 63:
-        return False, "Name exceeds the maximum length of 63 characters"
-    if not re.match(pattern, name):
-        return False, "Name does not match the required pattern"
-    return True, ""
 
 def create_disk(data, project, oxide_host, headers):
     payload = {
@@ -249,7 +240,6 @@ def main():
     disk_source = module.params['disk_source']
     state = module.params['state']
 
-    # Validate name
     is_valid, error_message = validate_name(name)
     if not is_valid:
         module.fail_json(msg=error_message)

@@ -21,7 +21,7 @@
           block_size: 512
         state: present
 
-    - name: Create a blank disk
+    - name: Blank disk creation idempotence check
       oxide_disk:
         project: "{{ oxide_project }}"
         name: "defaultydisk"
@@ -50,10 +50,10 @@
         size: 50
         disk_source:
           type: "snapshot"
-          snapshot_id: "d5019993-eadf-423c-b529-ac9892c5d15f"
+          snapshot_id: "a1bcbc81-12e5-4fdd-84ba-378d620c1247"
         state: present
 
-    - name: Import
+    - name: Create an 'import' disk
       oxide_disk:
         project: "{{ oxide_project }}"
         name: "importo"
@@ -64,14 +64,9 @@
           block_size: 4096
         state: present
 
-    - name: Pause until prompt
+    - name: Pause for 15 seconds
       ansible.builtin.pause:
-
-    - name: Delete a disk
-      oxide_disk:
-        project: "{{ oxide_project }}"
-        name: "blanketyblank"
-        state: absent
+        seconds: 15
 
     - name: Delete a few disks
       oxide_disk:

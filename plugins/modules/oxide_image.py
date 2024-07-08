@@ -5,9 +5,9 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.oxide_utils import validate_name
 import requests
 import json
-import re
 
 DOCUMENTATION = r'''
 ---
@@ -128,14 +128,6 @@ response:
   type: dict
 '''
 
-def validate_name(name):
-    pattern = r"^[a-z0-9][a-z0-9-]*$"
-    if len(name) > 63:
-        return False, "Name exceeds the maximum length of 63 characters"
-    if not re.match(pattern, name):
-        return False, "Name does not match the required pattern"
-    return True, ""
-
 def create_image(data, project, oxide_host, headers):
     if 'snapshot' not in data['source'] or 'id' not in data['source']['snapshot']:
         return 400, {'error_code': 'InvalidSource', 'message': 'The source must include a snapshot id'}
@@ -146,8 +138,8 @@ def create_image(data, project, oxide_host, headers):
         "os": data['os'],
         "version": data['version'],
         "source": {
-            "type": "snapshot",  # Set the type as snapshot
-            "id": data['source']['snapshot']['id']  # Directly use id under source
+            "type": "snapshot",
+            "id": data['source']['snapshot']['id']
         }
     }
     response = requests.post(f"{oxide_host}/v1/images?project={project}", headers=headers, json=payload)
@@ -199,7 +191,6 @@ def main():
     source = module.params['source']
     state = module.params['state']
 
-    # Validate name
     is_valid, error_message = validate_name(name)
     if not is_valid:
         module.fail_json(msg=error_message)
@@ -247,9 +238,6 @@ def main():
                 module.fail_json(msg="Failed to delete image", response=image)
         else:
             module.fail_json(msg="Failed to delete image", response=image)
-
-
-
 
 
 if __name__ == '__main__':
