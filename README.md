@@ -2,26 +2,27 @@
 
 This repository contains the `oxide.computer` Ansible Collection.
 
+Please note this collection is in a **very early development stage**. 
+
+> Here be dragons!
+
+## Modules
+
+The following modules have been created so far:
+
+| Module         | Description                                |
+|----------------|--------------------------------------------|
+| oxide_disk     | Create and delete different types of disks |
+| oxide_image    | Create images from snapshots               |
+| oxide_project  | Manage projects                            |
+| oxide_snapshot | Manage snapshots                           |
+| oxide_ssh_key  | Manage user SSH keys                       |
+
+As you can see, there is no '_info' type modules yet and key modules that would manage instances and networking are missing too. These will be picked up next. The initial goal is to have a similar parity with the [existing Terraform](https://registry.terraform.io/providers/oxidecomputer/oxide/latest/docs).
+
 ## Using this collection
 
-```bash
-    ansible-galaxy collection install oxide.computer
-```
-
-You can also include it in a `requirements.yml` file and install it via `ansible-galaxy collection install -r requirements.yml` using the format:
-
-```yaml
-collections:
-  - name: oxide.computer
-```
-
-To upgrade the collection to the latest available version, run the following command:
-
-```bash
-ansible-galaxy collection install oxide.computer --upgrade
-```
-
-See [Ansible Using collections](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html) for more details.
+See [installing collections](https://docs.ansible.com/ansible/latest/collections_guide/collections_installing.html) and [using collections](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html) for more details.
 
 Authentication requires a token which can be obtained using the Oxide CLI:
 ```bash
