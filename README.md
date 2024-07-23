@@ -2,7 +2,7 @@
 
 This repository contains the `oxide.computer` Ansible Collection.
 
-Please note this collection is in a **very early development stage**. 
+Please note this collection is in a **very early development stage**.
 
 > Here be dragons!
 
@@ -17,6 +17,7 @@ The following modules have been created so far:
 | oxide_project  | Manage projects                            |
 | oxide_snapshot | Manage snapshots                           |
 | oxide_ssh_key  | Manage user SSH keys                       |
+| oxide_instance | Manage compute instances (fairly minimal)  |
 
 As you can see, there is no '_info' type modules yet and key modules that would manage instances and networking are missing too. These will be picked up next. The initial goal is to have a similar parity with the [existing Terraform](https://registry.terraform.io/providers/oxidecomputer/oxide/latest/docs).
 
