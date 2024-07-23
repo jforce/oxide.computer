@@ -1,0 +1,31 @@
+---
+- name: Manage Oxide Instances
+  hosts: localhost
+  vars_files:
+    - ./oxide_vault.yaml
+  module_defaults:
+    oxide_instance:
+      oxide_host: "{{ oxide_api }}"
+      oxide_token: "{{ oxide_token }}"
+      project: "{{ oxide_project }}"
+  tasks:
+
+    - name: Create an instance
+      oxide_instance:
+        name: "albert"
+        description: "The Italian Greyhound"
+        hostname: "albert"
+        memory: 4
+        ncpus: 1
+        disks:
+          create:
+            - description: "disk description"
+              disk_source:
+                type: "image"
+                image_id: "5c2bfb2c-6e7b-4542-940e-7231161a2f80"
+              name: "croissant"
+              size: 10
+        ssh_public_keys:
+          - "jfx1"
+        user_data: I2Nsb3VkLWNvbmZpZwpncm91cHM6CiAgLSBhZG1pbmdyb3VwOiBbcm9vdCxzeXNdCiAgLSBjbG91ZC11c2Vycwp1c2VyczoKICAtIG5hbWU6IGFsYmVydAogICAgZ2Vjb3M6IEFsYmVydCBUaGUgR3JleWhvdW5kCiAgICBwcmltYXJ5X2dyb3VwOiBjbG91ZC11c2VycwogICAgc2VsaW51eF91c2VyOiBzdGFmZl91CiAgICBleHBpcmVkYXRlOiAnMjAzMi0wOS0wMScKICAgIGxvY2tfcGFzc3dkOiBmYWxzZQogICAgcGFzc3dkOiAkNiRyb3VuZHM9NDA5NiQvdHV2MUpBZ3NFeDR3aEdSJHMyRTJ2VWRINlBhekx2WENrcUlCQWJqdGNKVldNTHMwZmZvRXJzSEVKSEFpdEVyT1RMdUg4SWpjTEV4LmNRNXVxdzJvem1VVUdQNVBEQWozYm9BTUsvCg==
+        state: present
