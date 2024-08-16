@@ -1,7 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
-# Copyright: Oxide Computer Company
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from ansible.module_utils.basic import AnsibleModule
@@ -156,7 +154,7 @@ def main():
         argument_spec=dict(
             oxide_host=dict(required=True, type='str'),
 
-            
+
             oxide_token=dict(required=True, type='str', no_log=True),
             project=dict(required=True, type='str'),
             name=dict(required=True, type='str'),
