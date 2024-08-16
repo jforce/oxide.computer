@@ -96,10 +96,6 @@ options:
             description:
               - The ID of the image to use as the disk source. Required if C(type=image).
             type: str
-      id:
-        description:
-          - The ID of the disk to attach. Required for C(attach).
-        type: str
   ssh_public_keys:
     description:
       - A list of SSH public keys to add to the instance.
@@ -132,7 +128,7 @@ EXAMPLES = r'''
 - name: Create an instance
   oxide_instance:
     name: "albert"
-    description: "an instance named albert"
+    description: "The Italian Greyhound"
     hostname: "albert"
     memory: 4
     ncpus: 1
@@ -145,7 +141,7 @@ EXAMPLES = r'''
           type: "image"
           image_id: "5c2bfb2c-6e7b-4542-940e-7231161a2f80"
     ssh_public_keys:
-      - "mykey"
+      - "jfx1"
     user_data: I2Nsb3VkLWNvbmZpZwpncm91cHM6CiAgLSBhZG1pbmdyb3VwOiBbcm9vdCxzeXNdCiAgLSBjbG91ZC11c2Vycwp1c2VyczoKICAtIG5hbWU6IGFsYmVydAogICAgZ2Vjb3M6IEFsYmVydCBUaGUgR3JleWhvdW5kCiAgICBwcmltYXJ5X2dyb3VwOiBjbG91ZC11c2VycwogICAgc2VsaW51eF91c2VyOiBzdGFmZl91CiAgICBleHBpcmVkYXRlOiAnMjAzMi0wOS0wMScKICAgIGxvY2tfcGFzc3dkOiBmYWxzZQogICAgcGFzc3dkOiAkNiRyb3VuZHM9NDA5NiQvdHV2MUpBZ3NFeDR3aEdSJHMyRTJ2VWRINlBhekx2WENrcUlCQWJqdGNKVldNTHMwZmZvRXJzSEVKSEFpdEVyT1RMdUg4SWpjTEV4LmNRNXVxdzJvem1VVUdQNVBEQWozYm9BTUsvCg==
     state: present
 
@@ -157,7 +153,7 @@ EXAMPLES = r'''
     memory: 4
     ncpus: 1
     disks:
-      - id: "existing_disk_id"
+      - name: "existingdisk"
         type: attach
     state: present
 
@@ -188,6 +184,7 @@ response:
   returned: on failure
   type: dict
 '''
+
 
 def main():
     module = AnsibleModule(
@@ -247,7 +244,7 @@ def main():
                     })
                 elif disk['type'] == 'attach':
                     disk_payload.append({
-                        "id": disk['id'],
+                        "name": disk['name'],
                         "type": "attach"
                     })
 

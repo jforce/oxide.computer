@@ -30,6 +30,7 @@ def create_instance(data, project, oxide_host, headers):
         "ncpus": data['ncpus'],
         "start_on_create": data.get('start_on_create', True)
     }
+
     disks_payload = []
     if 'disks' in data and data['disks']:
         for disk in data['disks']:
@@ -43,15 +44,19 @@ def create_instance(data, project, oxide_host, headers):
                 })
             elif disk['type'] == 'attach':
                 disks_payload.append({
-                    "id": disk['id'],
+                    "name": disk['name'],
                     "type": "attach"
                 })
+
     if disks_payload:
         payload['disks'] = disks_payload
+
     if 'ssh_public_keys' in data and data['ssh_public_keys']:
         payload['ssh_public_keys'] = data['ssh_public_keys']
+
     if 'user_data' in data and data['user_data']:
         payload['user_data'] = data['user_data']
+
     response = requests.post(f"{oxide_host}/v1/instances?project={project}", headers=headers, json=payload)
     return response.status_code, response.json()
 
